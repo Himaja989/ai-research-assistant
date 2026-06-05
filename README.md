@@ -1,97 +1,316 @@
 # AI Research Assistant
 
-A full-stack Perplexity-style AI research tool with real-time streaming, document intelligence, RAG pipeline, voice input, and subscription plans.
-
----
-
-## Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 18 + Vite + Tailwind CSS |
-| Backend | FastAPI (Python) |
-| AI | OpenAI GPT-4o + text-embedding-3-small |
-| Vector DB | FAISS (in-process) |
-| Database | MongoDB Atlas |
-| Auth | JWT (bcrypt + PyJWT) |
-
----
-
-## Setup
-
-### 1. Backend
-
-```bash
-cd server
-
-# Activate the virtual env (already created)
-source venv/bin/activate
-
-# Install new dependencies (bcrypt, PyJWT)
-pip install bcrypt PyJWT
-
-# OR reinstall everything
-pip install -r requirements.txt
-
-# Add your OpenAI key to .env
-# OPENAI_API_KEY=sk-...
-
-# Run
-uvicorn main:app --reload --port 8000
-```
-
-Backend runs at: http://localhost:8000  
-API docs: http://localhost:8000/docs
-
----
-
-### 2. Frontend
-
-```bash
-cd client
-
-# Install dependencies
-npm install
-
-# Run dev server
-npm run dev
-```
-
-Frontend runs at: http://localhost:5173
-
----
+A production-ready AI-powered research platform built with FastAPI, React, MongoDB, FAISS, and modern AI APIs. The application enables users to chat with AI, upload and analyze documents, process images and videos, manage conversations, and perform retrieval-augmented research using their own data.
 
 ## Features
 
-- **Streaming chat** — SSE-based real-time streaming with GPT-4o
-- **RAG pipeline** — Upload PDFs/text → FAISS vector index → grounded answers
-- **Document panel** — Upload, list, and delete files per conversation
-- **Summarize PDF** — One-click document summarization
-- **Voice input** — Web Speech API (Chrome/Edge)
-- **Prompt templates** — Explain / Compare / Summarize / Analyze
-- **Follow-up suggestions** — Clickable question chips under every response
-- **Conversation history** — Searchable, renameable, deleteable
-- **Dark mode** — System-aware, persisted
-- **Auth** — JWT register/login
-- **Subscription tiers** — Free / Pro ($19) / Enterprise ($99)
-- **Video upload** — Up to 100MB on Pro plan
+### AI Chat
+
+* Real-time streaming AI responses using Server-Sent Events (SSE)
+* Conversation history and management
+* Research-focused AI assistant
+* Markdown and code rendering support
+
+### Retrieval-Augmented Generation (RAG)
+
+* Semantic search using FAISS vector indexing
+* Context-aware responses from uploaded documents
+* Document chunking and embedding generation
+* Citation-based answers
+
+### Document Processing
+
+* PDF support
+* TXT support
+* CSV support
+* JSON support
+* Markdown support
+* HTML support
+* XML support
+* OCR fallback for scanned PDFs
+
+### Image Understanding
+
+* Upload and analyze images
+* AI-powered image descriptions
+* Question answering on uploaded images
+
+### Video Analysis
+
+* Upload video files
+* Frame extraction using OpenCV
+* AI-generated video summaries
+
+### Voice Input
+
+* Speech-to-text transcription
+* Voice-enabled AI interactions
+
+### Authentication & Security
+
+* JWT authentication
+* Secure password hashing with bcrypt
+* Protected API routes
+* User account management
+
+### Subscription System
+
+* Free Plan
+* Pro Plan
+* Enterprise Plan
+* Usage and upload limits
+
+### Additional Features
+
+* Dark mode support
+* Responsive design
+* PDF export generation
+* Conversation search
+* File upload management
 
 ---
 
-## .env (server)
+## Architecture
 
-```
-MONGO_URI=your_mongodb_uri
-OPENAI_API_KEY=sk-...
-JWT_SECRET=change-this-in-production
+Frontend:
+
+* React 18
+* Vite
+* Tailwind CSS
+* Zustand
+* React Router
+* Axios
+* Nginx
+
+Backend:
+
+* FastAPI
+* Uvicorn
+* MongoDB Atlas
+* FAISS
+* Sentence Transformers
+* Groq API
+* OpenAI API
+* ReportLab
+* OpenCV
+
+---
+
+## Project Structure
+
+```text
+ai-research-assistant/
+│
+├── client/
+│   ├── src/
+│   ├── public/
+│   ├── Dockerfile
+│   └── nginx.conf
+│
+├── server/
+│   ├── app/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── models/
+│   │   └── rag/
+│   │
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── main.py
+│
+├── docker-compose.yml
+├── README.md
+└── railway.toml
 ```
 
 ---
 
-## File upload limits
+## Docker Images
 
-| Plan | Documents | Videos |
-|---|---|---|
-| Free | 10 MB | Not allowed |
-| Pro | 50 MB | 100 MB |
-| Enterprise | 500 MB | 500 MB |
+Frontend:
+
+```bash
+docker pull himajaarabati/ai-research-assistant-frontend
+```
+
+Backend:
+
+```bash
+docker pull himajaarabati/ai-research-assistant-backend
+```
+
+---
+
+## Quick Start
+
+### Clone Repository
+
+```bash
+git clone https://github.com/Himaja989/ai-research-assistant.git
+cd ai-research-assistant
+```
+
+### Create Environment File
+
+Create:
+
+```text
+server/.env
+```
+
+Example:
+
+```env
+MONGO_URI=your_mongodb_connection_string
+GROQ_API_KEY=your_groq_api_key
+OPENAI_API_KEY=your_openai_api_key
+JWT_SECRET=your_secret_key
+```
+
+### Run with Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+Frontend:
+
+```text
+http://localhost
+```
+
+Backend API:
+
+```text
+http://localhost:8000
+```
+
+API Documentation:
+
+```text
+http://localhost:8000/docs
+```
+
+Health Check:
+
+```text
+http://localhost:8000/health
+```
+
+---
+
+## Environment Variables
+
+| Variable       | Required | Description               |
+| -------------- | -------- | ------------------------- |
+| MONGO_URI      | Yes      | MongoDB connection string |
+| GROQ_API_KEY   | Yes      | Groq API key              |
+| OPENAI_API_KEY | Optional | OpenAI API key            |
+| JWT_SECRET     | Yes      | JWT signing secret        |
+
+---
+
+## API Endpoints
+
+### Authentication
+
+```text
+POST /api/auth/register
+POST /api/auth/login
+GET  /api/auth/me
+```
+
+### Conversations
+
+```text
+GET    /api/conversations
+POST   /api/conversations
+DELETE /api/conversations/{id}
+```
+
+### Chat
+
+```text
+POST /api/chat/stream
+POST /api/chat/vision
+POST /api/chat/summarize
+```
+
+### Documents
+
+```text
+POST   /api/documents/upload
+GET    /api/documents/{conversation_id}
+DELETE /api/documents/{id}
+POST   /api/documents/generate-pdf
+```
+
+### Subscription
+
+```text
+GET  /api/subscription/plans
+GET  /api/subscription/current
+POST /api/subscription/upgrade
+```
+
+### System
+
+```text
+GET /health
+```
+
+---
+
+## Deployment
+
+### Docker Hub
+
+Frontend:
+
+```bash
+docker pull himajaarabati/ai-research-assistant-frontend
+```
+
+Backend:
+
+```bash
+docker pull himajaarabati/ai-research-assistant-backend
+```
+
+### Railway
+
+```bash
+railway up
+```
+
+---
+
+## Technologies Used
+
+### Frontend
+
+* React 18
+* Vite
+* Tailwind CSS
+* Zustand
+* React Router
+* Axios
+* Nginx
+
+### Backend
+
+* FastAPI
+* Uvicorn
+* MongoDB Atlas
+* FAISS
+* Sentence Transformers
+* Groq
+* OpenAI
+* OpenCV
+* ReportLab
+
+---
+
+## License
+
+This project is provided for educational and portfolio purposes.

@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./server
+    container_name: ai_backend
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    volumes:
+      - uploads_data:/app/app/uploads
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build: ./client
+    container_name: ai_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  uploads_data:

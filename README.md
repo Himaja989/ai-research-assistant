@@ -93,6 +93,7 @@ Backend:
 * OpenAI API
 * ReportLab
 * OpenCV
+* Claude API
 
 ---
 
